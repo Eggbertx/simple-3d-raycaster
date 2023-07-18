@@ -5,10 +5,13 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define WINDOW_TITLE "@PROJECT_NAME@: Raycaster"
+#define WINDOW_TITLE "@PROJECT_NAME@"
 
-#define KEY_ESCAPE 27
+#define PLAYER_MOVE_SPEED 5
+#define PLAYER_TURN_SPEED 0.1
 
-#define PLAYER_SPEED 5
+#define PI 3.1415926535
+#define DELTA_MODIFIER 5
+
 
 #endif // SIMPLE3D_CONFIG_H

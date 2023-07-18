@@ -6,7 +6,6 @@
 #include <simple3D_config.h>
 #include "keys.h"
 
-#define PI 3.1415926535
 
 float playerX, playerY, playerDX, playerDY, playerAngle;
 int mapWidth = 8, mapHeight = 8, mapSize = 64;
@@ -43,27 +42,55 @@ void drawMap2D() {
 }
 
 void drawPlayer() {
+	// draw player as dot
 	glColor3f(1, 1, 0);
 	glPointSize(8);
 	glBegin(GL_POINTS);
-	printf("Drawing player at position (%f,%f)\n", playerX, playerY);
+	printf("Player info:\n"
+		"Position: (%f,%f)\n"
+		"Angle: %f\n"
+		"(dx, dy): (%f,%f\n)",
+		playerX, playerY, playerAngle, playerDX, playerDY);
 	glVertex2i(playerX, playerY);
 	glEnd();
+
+	// draw view direction as segment
+	glLineWidth(3);
+	glBegin(GL_LINES);
+	glVertex2i(playerX, playerY);
+	glVertex2i(playerX + playerDX*5, playerY + playerDY*5);
+	glEnd();
+}
+
+void fixAngle() {
+	if(playerAngle < 0) {
+		playerAngle += 2 * PI;
+	} else if(playerAngle > 2 * PI) {
+		playerAngle -= 2 * PI;
+	}
 }
 
 void buttons(unsigned char key, int x, int y) {
 	switch (key) {
-	case 'a':
-		playerX -= PLAYER_SPEED;
+	case KEY_TURN_LEFT:
+		playerAngle -= PLAYER_TURN_SPEED;
+		fixAngle();
+		playerDX = cos(playerAngle) * 5;
+		playerDY = sin(playerAngle) * 5;
 		break;
-	case 'd':
-		playerX += PLAYER_SPEED;
+	case KEY_TURN_RIGHT:
+		playerAngle += PLAYER_TURN_SPEED;
+		fixAngle();
+		playerDX = cos(playerAngle) * 5;
+		playerDY = sin(playerAngle) * 5;
 		break;
-	case 'w':
-		playerY -= PLAYER_SPEED;
+	case KEY_MOVE_FORWARD:
+		playerX += playerDX;
+		playerY += playerDY;
 		break;
-	case 's':
-		playerY += PLAYER_SPEED;
+	case KEY_MOVE_BACKWARDS:
+		playerX -= playerDX;
+		playerY -= playerDY;
 		break;
 	case KEY_ESCAPE:
 		printf("Escape key pressed, exiting\n");
@@ -86,6 +113,8 @@ void init() {
 	gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	playerX = 300;
 	playerY = 300;
+	playerDX = cos(playerAngle) * 5;
+	playerDY = sin(playerDY) * 5;
 }
 
 int main(int argc, char *argv[]) {
