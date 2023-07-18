@@ -8,6 +8,8 @@ find_package(OpenGL REQUIRED)
 configure_file(include/simple3D_config.h.in include/simple3D_config.h)
 set(SOURCES
 	src/keys.c
+	src/actors.c
+	src/map.c
 	src/main.c
 )
 
