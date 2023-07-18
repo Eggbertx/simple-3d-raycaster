@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(simple3D VERSION 0.1 LANGUAGES C)
+project(simple-3d-raycaster VERSION 0.1 LANGUAGES C)
 set(OpenGL_GL_PREFERENCE LEGACY)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -11,9 +11,9 @@ set(SOURCES
 	src/main.c
 )
 
-add_executable(simple3D ${SOURCES})
-target_link_libraries(simple3D PRIVATE
+add_executable(${PROJECT_NAME} ${SOURCES})
+target_link_libraries(${PROJECT_NAME} PRIVATE
 	${GLUT_LIBRARIES}
 	${OPENGL_LIBRARIES}
 )
-target_include_directories(simple3D PRIVATE "${PROJECT_BINARY_DIR}/include")
+target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_BINARY_DIR}/include")
