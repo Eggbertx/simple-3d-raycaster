@@ -1,0 +1,14 @@
+#ifndef SIMPLE3D_CONFIG_H
+#define SIMPLE3D_CONFIG_H
+#define simple3D_VERSION_MAJOR @simple3D_VERSION_MAJOR@
+#define simple3D_VERSION_MINOR @simple3D_VERSION_MINOR@
+
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define WINDOW_TITLE "@PROJECT_NAME@: Raycaster"
+
+#define KEY_ESCAPE 27
+
+#define PLAYER_SPEED 5
+
+#endif // SIMPLE3D_CONFIG_H
