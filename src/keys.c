@@ -11,7 +11,7 @@ void onKeyDown(unsigned char key, int x, int y) {
 		keyStates[STATE_FORWARD] = 1;
 		break;
 	case KEY_MOVE_BACKWARDS:
-		keyStates[STATE_FORWARD] = 1;
+		keyStates[STATE_BACKWARDS] = 1;
 		break;
 	case KEY_TURN_LEFT:
 		keyStates[STATE_TURN_LEFT] = 1;
@@ -34,7 +34,7 @@ void onKeyUp(unsigned char key, int x, int y) {
 		keyStates[STATE_FORWARD] = 0;
 		break;
 	case KEY_MOVE_BACKWARDS:
-		keyStates[STATE_FORWARD] = 0;
+		keyStates[STATE_BACKWARDS] = 0;
 		break;
 	case KEY_TURN_LEFT:
 		keyStates[STATE_TURN_LEFT] = 0;

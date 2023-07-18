@@ -14,19 +14,21 @@ void updatePlayer() {
 	if(getKeyState(STATE_FORWARD) == 1) {
 		player->x += player->dx;
 		player->y += player->dy;
-	} else if(getKeyState(STATE_BACKWARDS) == 1) {
+	}
+	if(getKeyState(STATE_BACKWARDS) == 1) {
 		player->x -= player->dx;
 		player->y -= player->dy;
 	}
 	if(getKeyState(STATE_TURN_LEFT) == 1) {
 		player->angle -= PLAYER_TURN_SPEED;
-		player->dx = cos(player->angle) * DELTA_MODIFIER;
-		player->dy = sin(player->angle) * DELTA_MODIFIER;
+		player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
+		player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
 		fixAngle();
-	} else if(getKeyState(STATE_TURN_RIGHT) == 1) {
+	}
+	if(getKeyState(STATE_TURN_RIGHT) == 1) {
 		player->angle += PLAYER_TURN_SPEED;
-		player->dx = cos(player->angle) * DELTA_MODIFIER;
-		player->dy = sin(player->angle) * DELTA_MODIFIER;
+		player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
+		player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
 		fixAngle();
 	}
 	glutPostRedisplay();
@@ -50,7 +52,10 @@ void drawPlayer() {
 	glLineWidth(3);
 	glBegin(GL_LINES);
 	glVertex2i(player->x, player->y);
-	glVertex2i(player->x + player->dx * DELTA_MODIFIER, player->y + player->dy * DELTA_MODIFIER);
+	glVertex2i(
+		player->x + player->dx * DELTA_MODIFIER,
+		player->y + player->dy * DELTA_MODIFIER
+	);
 	glEnd();
 	updatePlayer();
 }
@@ -68,8 +73,8 @@ void init() {
 	gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	player = getPlayer();
 	setPlayerPos(1, 1);
-	player->dx = cos(player->angle) * DELTA_MODIFIER;
-	player->dy = sin(player->dy) * DELTA_MODIFIER;
+	player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
+	player->dy = sin(player->dy) * PLAYER_MOVE_SPEED;
 }
 
 int main(int argc, char *argv[]) {
