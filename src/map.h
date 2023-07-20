@@ -8,4 +8,6 @@
 
 void drawMap2D();
 
+int hasCollision(int x, int y);
+
 #endif // MAP_H

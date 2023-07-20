@@ -33,3 +33,10 @@ void drawMap2D() {
 		}
 	}
 }
+
+int hasCollision(int x, int y) {
+	if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_WIDTH) {
+		return 1;
+	}
+	return map[y * MAP_WIDTH + x];
+}
