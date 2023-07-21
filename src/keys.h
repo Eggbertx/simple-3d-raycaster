@@ -8,6 +8,13 @@
 #define KEY_TOGGLE_2D_MAP '\t'
 #define KEY_ESCAPE 27
 
+typedef struct {
+	int forward;
+	int backwards;
+	int turnLeft;
+	int turnRight;
+} keyStates;
+
 #define STATE_FORWARD 0
 #define STATE_BACKWARDS 1
 #define STATE_TURN_LEFT 2

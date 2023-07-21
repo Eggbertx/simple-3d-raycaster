@@ -3,21 +3,21 @@
 
 #include "keys.h"
 
-unsigned char keyStates[4];
+keyStates states;
 
 void onKeyDown(unsigned char key, int x, int y) {
 	switch(key) {
 	case KEY_MOVE_FORWARD:
-		keyStates[STATE_FORWARD] = 1;
+		states.forward = 1;
 		break;
 	case KEY_MOVE_BACKWARDS:
-		keyStates[STATE_BACKWARDS] = 1;
+		states.backwards = 1;
 		break;
 	case KEY_TURN_LEFT:
-		keyStates[STATE_TURN_LEFT] = 1;
+		states.turnLeft = 1;
 		break;
 	case KEY_TURN_RIGHT:
-		keyStates[STATE_TURN_RIGHT] = 1;
+		states.turnRight = 1;
 		break;
 	case KEY_ESCAPE:
 		glutLeaveMainLoop();
@@ -31,16 +31,16 @@ void onKeyDown(unsigned char key, int x, int y) {
 void onKeyUp(unsigned char key, int x, int y) {
 	switch (key) {
 	case KEY_MOVE_FORWARD:
-		keyStates[STATE_FORWARD] = 0;
+		states.forward = 0;
 		break;
 	case KEY_MOVE_BACKWARDS:
-		keyStates[STATE_BACKWARDS] = 0;
+		states.backwards = 0;
 		break;
 	case KEY_TURN_LEFT:
-		keyStates[STATE_TURN_LEFT] = 0;
+		states.turnLeft = 0;
 		break;
 	case KEY_TURN_RIGHT:
-		keyStates[STATE_TURN_RIGHT] = 0;
+		states.turnRight = 0;
 		break;
 	default:
 		break;
@@ -48,8 +48,17 @@ void onKeyUp(unsigned char key, int x, int y) {
 }
 
 int getKeyState(unsigned int state) {
-	if(state > 3) return 0;
-	return keyStates[state];
+	switch (state) {
+	case STATE_FORWARD:
+		return states.forward;
+	case STATE_BACKWARDS:
+		return states.backwards;
+	case STATE_TURN_LEFT:
+		return states.turnLeft;
+	case STATE_TURN_RIGHT:
+		return states.turnRight;
+	}
+	return 0;
 }
 
 void initKeyboard() {
