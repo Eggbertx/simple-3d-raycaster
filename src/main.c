@@ -112,16 +112,17 @@ void drawRays3D() {
 			rayX = vx;
 			rayY = vy;
 			rayDistance = distV;
+			glColor3f(WALL_COLOR_V, 0, 0);
 		}
 		if(distH < distV) {
 			// ray hit a horizontal line/wall
 			rayX = hx;
 			rayY = hy;
 			rayDistance = distH;
+			glColor3f(WALL_COLOR_H, 0, 0);
 		}
 
 		// draw ray(s) to the nearest horizontal or vertical wall
-		glColor3f(1, 0, 0);
 		glLineWidth(2);
 		glBegin(GL_LINES);
 		glVertex2i(player->x, player->y);
@@ -153,14 +154,12 @@ void updatePlayer() {
 		player->y -= player->dy;
 	}
 	if(getKeyState(STATE_TURN_LEFT) == 1) {
-		player->angle -= PLAYER_TURN_SPEED;
-		player->angle = fixAngle(player->angle);
+		player->angle = fixAngle(player->angle - PLAYER_TURN_SPEED);
 		player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
 		player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
 	}
 	if(getKeyState(STATE_TURN_RIGHT) == 1) {
-		player->angle += PLAYER_TURN_SPEED;
-		player->angle = fixAngle(player->angle);
+		player->angle = fixAngle(player->angle + PLAYER_TURN_SPEED);
 		player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
 		player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
 	}
