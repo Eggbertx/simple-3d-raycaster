@@ -207,6 +207,10 @@ void init() {
 	player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
 }
 
+void reshapeWindow(int w, int h) {
+	glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
+}
+
 int main(int argc, char *argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -215,6 +219,7 @@ int main(int argc, char *argv[]) {
 	init();
 	initKeyboard();
 	glutDisplayFunc(display);
+	glutReshapeFunc(reshapeWindow);
 	glutMainLoop();
 	return 0;
 }
