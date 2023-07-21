@@ -9,6 +9,7 @@
 
 #define PLAYER_MOVE_SPEED 5
 #define PLAYER_TURN_SPEED deg2rad(2.0)
+#define PLAYER_OFFSET 20
 
 #define PI 3.1415926535
 #define PI_2 PI/2

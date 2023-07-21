@@ -2,7 +2,7 @@
 
 #include "map.h"
 
-int map[] = {
+int _map[] = {
 	1, 1, 1, 1, 1, 1, 1, 1,
 	1, 0, 1, 0, 0, 0, 0, 1,
 	1, 0, 1, 0, 0, 0, 0, 1,
@@ -17,7 +17,7 @@ void drawMap2D() {
 	int xo, yo;
 	for(int y = 0; y < MAP_HEIGHT; y++) {
 		for(int x = 0; x < MAP_WIDTH; x++) {
-			if(map[y * MAP_HEIGHT + x] == 1) {
+			if(_map[y * MAP_HEIGHT + x] == 1) {
 				glColor3f(1, 1, 1);
 			} else {
 				glColor3f(0, 0, 0);
@@ -38,5 +38,9 @@ int hasCollision(int x, int y) {
 	if(x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_WIDTH) {
 		return 1;
 	}
-	return map[y * MAP_WIDTH + x];
+	return _map[y * MAP_WIDTH + x];
+}
+
+int* getCurrentMap() {
+	return _map;
 }

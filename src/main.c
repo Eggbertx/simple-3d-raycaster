@@ -9,6 +9,7 @@
 #include "map.h"
 
 actor* player;
+int* map;
 float defaultDistance;
 
 float distance(float ax, float ay, float bx, float by) {
@@ -145,13 +146,39 @@ void drawRays3D() {
 }
 
 void updatePlayer() {
+	int xOffset = 0, yOffset = 0;
+	if(player->dx < 0) {
+		xOffset = -PLAYER_OFFSET;
+	} else {
+		xOffset = PLAYER_OFFSET;
+	}
+	if(player->dy < 0) {
+		yOffset = -PLAYER_OFFSET;
+	} else  {
+		yOffset = PLAYER_OFFSET;
+	}
+	int ipx = player->x/TILE_SIZE;
+	int ipy = player->y/TILE_SIZE;
+	int ipxAdd = (player->x + xOffset)/TILE_SIZE;
+	int ipxSub = (player->x - xOffset)/TILE_SIZE;
+	int ipyAdd = (player->y + yOffset)/TILE_SIZE;
+	int ipySub = (player->y - yOffset)/TILE_SIZE;
+
 	if(getKeyState(STATE_FORWARD) == 1) {
-		player->x += player->dx;
-		player->y += player->dy;
+		if(map[ipy * MAP_WIDTH + ipxAdd] == 0) {
+			player->x += player->dx;
+		}
+		if(map[ipyAdd * MAP_WIDTH + ipx] == 0) {
+			player->y += player->dy;
+		}
 	}
 	if(getKeyState(STATE_BACKWARDS) == 1) {
-		player->x -= player->dx;
-		player->y -= player->dy;
+		if(map[ipy * MAP_WIDTH + ipxSub] == 0) {
+			player->x -= player->dx;
+		}
+		if(map[ipySub * MAP_WIDTH + ipx] == 0) {
+			player->y -= player->dy;
+		}
 	}
 	if(getKeyState(STATE_TURN_LEFT) == 1) {
 		player->angle = fixAngle(player->angle - PLAYER_TURN_SPEED);
@@ -201,6 +228,7 @@ void init() {
 	gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	defaultDistance = sqrt(pow(WINDOW_WIDTH, 2) + pow(WINDOW_HEIGHT, 2));
 	player = getPlayer();
+	map = getCurrentMap();
 	player->angle = ONE_RAD*90;
 	setPlayerPos(1, 1);
 	player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
