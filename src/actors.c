@@ -13,11 +13,3 @@ void setPlayerPos(int x, int y) {
 	_player.x = x * TILE_SIZE + TILE_SIZE/2;
 	_player.y = y * TILE_SIZE + TILE_SIZE/2;
 }
-
-void fixAngle() {
-	if(_player.angle < 0) {
-		_player.angle += 2 * PI;
-	} else if(_player.angle > 2 * PI) {
-		_player.angle -= 2 * PI;
-	}
-}

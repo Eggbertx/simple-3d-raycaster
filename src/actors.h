@@ -9,8 +9,6 @@ typedef struct {
 	float angle;
 } actor;
 
-void fixAngle();
-
 actor* getPlayer();
 
 void setPlayerPos(int x, int y);

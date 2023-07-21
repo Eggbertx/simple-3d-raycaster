@@ -15,10 +15,20 @@ float distance(float ax, float ay, float bx, float by) {
 	return sqrt(pow(bx - ax, 2) + pow(by - ay, 2));
 }
 
+float fixAngle(float angle) {
+	if(angle < 0) {
+		angle += 2*PI;
+	} else if(angle > 2*PI) {
+		angle -= 2*PI;
+	}
+	return angle;
+}
+
 void drawRays3D() {
 	int r, mapX, mapY, mapIndex, depthOfField;
-	float rayX, rayY, rayAngle, xOffset, yOffset;
-	rayAngle = player->angle;
+	float rayX, rayY, rayAngle, rayDistance, xOffset, yOffset;
+
+	rayAngle = fixAngle(player->angle - ONE_RAD*30);
 	for(int r = 0; r < NUM_RAYS; r++) {
 		// check horizontal lines
 		depthOfField = 0;
@@ -98,19 +108,38 @@ void drawRays3D() {
 			}
 		}
 		if(distV < distH) {
+			// ray hit a vertical line/wall
 			rayX = vx;
 			rayY = vy;
+			rayDistance = distV;
 		}
 		if(distH < distV) {
+			// ray hit a horizontal line/wall
 			rayX = hx;
 			rayY = hy;
+			rayDistance = distH;
 		}
+
+		// draw ray(s) to the nearest horizontal or vertical wall
 		glColor3f(1, 0, 0);
 		glLineWidth(2);
 		glBegin(GL_LINES);
 		glVertex2i(player->x, player->y);
 		glVertex2i(rayX, rayY);
 		glEnd();
+
+		// start drawing 3D walls
+		float angleDiff = fixAngle(player->angle - rayAngle);
+		rayDistance *= cos(angleDiff);
+		float lineHeight = min((TILE_SIZE * 320)/rayDistance, 320);
+		float lineOffset = 160 - lineHeight/2;
+		glLineWidth(RAY_WALL_SIZE);
+		glBegin(GL_LINES);
+		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+8, lineOffset);
+		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+8, lineHeight + lineOffset);
+		glEnd();
+
+		rayAngle = fixAngle(rayAngle + ONE_RAD);
 	}
 }
 
@@ -125,15 +154,15 @@ void updatePlayer() {
 	}
 	if(getKeyState(STATE_TURN_LEFT) == 1) {
 		player->angle -= PLAYER_TURN_SPEED;
+		player->angle = fixAngle(player->angle);
 		player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
 		player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
-		fixAngle();
 	}
 	if(getKeyState(STATE_TURN_RIGHT) == 1) {
 		player->angle += PLAYER_TURN_SPEED;
+		player->angle = fixAngle(player->angle);
 		player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
 		player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
-		fixAngle();
 	}
 	glutPostRedisplay();
 }
@@ -144,11 +173,6 @@ void drawPlayer() {
 	glPointSize(8);
 	glBegin(GL_POINTS);
 
-	// printf("Player info:\n"
-	// 	"Position: (%f,%f)\n"
-	// 	"Angle: %f\n"
-	// 	"(dx, dy): (%f,%f)\n",
-	// 	player->x, player->y, player->angle, player->dx, player->dy);
 	glVertex2i(player->x, player->y);
 	glEnd();
 
@@ -178,9 +202,10 @@ void init() {
 	gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	defaultDistance = sqrt(pow(WINDOW_WIDTH, 2) + pow(WINDOW_HEIGHT, 2));
 	player = getPlayer();
+	player->angle = ONE_RAD*90;
 	setPlayerPos(1, 1);
 	player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
-	player->dy = sin(player->dy) * PLAYER_MOVE_SPEED;
+	player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
 }
 
 int main(int argc, char *argv[]) {
@@ -191,7 +216,6 @@ int main(int argc, char *argv[]) {
 	init();
 	initKeyboard();
 	glutDisplayFunc(display);
-	// glutKeyboardFunc(buttons);
 	glutMainLoop();
 	return 0;
 }

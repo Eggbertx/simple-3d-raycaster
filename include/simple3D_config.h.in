@@ -3,20 +3,24 @@
 #define simple3D_VERSION_MAJOR @simple3D_VERSION_MAJOR@
 #define simple3D_VERSION_MINOR @simple3D_VERSION_MINOR@
 
-#define WINDOW_WIDTH 800
+#define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 600
 #define WINDOW_TITLE "@PROJECT_NAME@"
 
 #define PLAYER_MOVE_SPEED 5
-#define PLAYER_TURN_SPEED 0.07
+#define PLAYER_TURN_SPEED 0.05
 
 #define PI 3.1415926535
 #define PI_2 PI/2
 #define PI_3 3*PI/2
-#define NUM_RAYS 1
-
+#define ONE_RAD 1.0/180*PI
+#define NUM_RAYS 60
+#define RAY_WALL_SIZE 8
 
 #define DELTA_MODIFIER PLAYER_MOVE_SPEED
 
+#define deg2rad(deg) (deg/180*PI)
+#define rad2deg(rad) (rad/PI*180)
+#define min(a, b) ((a>b)?b:a)
 
 #endif // SIMPLE3D_CONFIG_H
