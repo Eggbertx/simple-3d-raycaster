@@ -8,6 +8,10 @@
 #include "actors.h"
 #include "map.h"
 
+#define SKYBOX_X MAP_WIDTH*TILE_SIZE+8
+#define SKYBOX_WIDTH 60*8-4
+#define SKYBOX_HEIGHT 160
+
 actor* player;
 int* map;
 float defaultDistance;
@@ -214,10 +218,17 @@ void drawPlayer() {
 	updatePlayer();
 }
 
+void drawSkyAndFloor() {
+	glColor3f(0.0, 0.59, 1.0); // sky color
+	glRecti(SKYBOX_X, 0, SKYBOX_X + SKYBOX_WIDTH, SKYBOX_HEIGHT);
+	glColor3f(0.35, 0.18, 0.0);
+	glRecti(SKYBOX_X, SKYBOX_HEIGHT, SKYBOX_X + SKYBOX_WIDTH, SKYBOX_HEIGHT*2);
+}
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	drawMap2D();
+	drawSkyAndFloor();
 	drawRays3D();
 	drawPlayer();
 	glutSwapBuffers();
