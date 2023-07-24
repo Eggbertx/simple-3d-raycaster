@@ -8,10 +8,6 @@
 #include "actors.h"
 #include "map.h"
 
-#define SKYBOX_X MAP_WIDTH*TILE_SIZE+8
-#define SKYBOX_WIDTH 60*8-4
-#define SKYBOX_HEIGHT 160
-
 actor* player;
 int* map;
 float defaultDistance;
@@ -145,7 +141,7 @@ void drawRays3D() {
 		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+8, lineHeight + lineOffset);
 		glEnd();
 
-		rayAngle = fixAngle(rayAngle + ONE_RAD);
+		rayAngle = fixAngle(rayAngle + ONE_RAD/2.0);
 	}
 }
 
@@ -185,14 +181,24 @@ void updatePlayer() {
 		}
 	}
 	if(getKeyState(STATE_TURN_LEFT) == 1) {
-		player->angle = fixAngle(player->angle - PLAYER_TURN_SPEED);
-		player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
-		player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
+		if(getKeyState(STATE_MOVING) == 1) {
+			player->x += sin(player->angle) * PLAYER_MOVE_SPEED;
+			player->y -= cos(player->angle) * PLAYER_MOVE_SPEED;
+		} else {
+			player->angle = fixAngle(player->angle - PLAYER_TURN_SPEED);
+			player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
+			player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
+		}
 	}
 	if(getKeyState(STATE_TURN_RIGHT) == 1) {
-		player->angle = fixAngle(player->angle + PLAYER_TURN_SPEED);
-		player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
-		player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
+		if(getKeyState(STATE_MOVING) == 1) {
+			player->x -= sin(player->angle) * PLAYER_MOVE_SPEED;
+			player->y += cos(player->angle) * PLAYER_MOVE_SPEED;
+		} else {
+			player->angle = fixAngle(player->angle + PLAYER_TURN_SPEED);
+			player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
+			player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
+		}
 	}
 	glutPostRedisplay();
 }

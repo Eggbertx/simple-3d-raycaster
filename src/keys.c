@@ -47,8 +47,30 @@ void onKeyUp(unsigned char key, int x, int y) {
 	}
 }
 
+void onSpecialKeyDown(int key, int x, int y) {
+	switch(key) {
+	case GLUT_KEY_ALT_L:
+	case GLUT_KEY_ALT_R:
+		states.moving = 1;
+		break;
+	default:
+		break;
+	}
+}
+
+void onSpecialKeyUp(int key, int x, int y) {
+	switch(key) {
+	case GLUT_KEY_ALT_L:
+	case GLUT_KEY_ALT_R:
+		states.moving = 0;
+		break;
+	default:
+		break;
+	}
+}
+
 int getKeyState(unsigned int state) {
-	switch (state) {
+	switch(state) {
 	case STATE_FORWARD:
 		return states.forward;
 	case STATE_BACKWARDS:
@@ -57,6 +79,8 @@ int getKeyState(unsigned int state) {
 		return states.turnLeft;
 	case STATE_TURN_RIGHT:
 		return states.turnRight;
+	case STATE_MOVING:
+		return states.moving;
 	}
 	return 0;
 }
@@ -64,5 +88,7 @@ int getKeyState(unsigned int state) {
 void initKeyboard() {
 	glutKeyboardFunc(onKeyDown);
 	glutKeyboardUpFunc(onKeyUp);
+	glutSpecialFunc(onSpecialKeyDown);
+	glutSpecialUpFunc(onSpecialKeyUp);
 	glutIgnoreKeyRepeat(GL_TRUE);
 }

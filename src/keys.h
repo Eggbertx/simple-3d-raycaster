@@ -13,12 +13,14 @@ typedef struct {
 	int backwards;
 	int turnLeft;
 	int turnRight;
+	int moving;
 } keyStates;
 
 #define STATE_FORWARD 0
 #define STATE_BACKWARDS 1
 #define STATE_TURN_LEFT 2
 #define STATE_TURN_RIGHT 3
+#define STATE_MOVING 4
 
 void initKeyboard();
 
