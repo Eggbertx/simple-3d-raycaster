@@ -22,10 +22,12 @@ void onKeyDown(unsigned char key, int x, int y) {
 	case KEY_ESCAPE:
 		glutLeaveMainLoop();
 		break;
+	case KEY_RESET:
+		states.reset = 1;
+		break;
 	default:
 		break;
 	}
-
 }
 
 void onKeyUp(unsigned char key, int x, int y) {
@@ -41,6 +43,9 @@ void onKeyUp(unsigned char key, int x, int y) {
 		break;
 	case KEY_TURN_RIGHT:
 		states.turnRight = 0;
+		break;
+	case KEY_RESET:
+		states.reset = 0;
 		break;
 	default:
 		break;
@@ -81,6 +86,8 @@ int getKeyState(unsigned int state) {
 		return states.turnRight;
 	case STATE_MOVING:
 		return states.moving;
+	case STATE_RESET:
+		return states.reset;
 	}
 	return 0;
 }

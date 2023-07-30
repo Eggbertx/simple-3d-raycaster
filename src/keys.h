@@ -7,6 +7,7 @@
 #define KEY_TURN_RIGHT 'd'
 #define KEY_TOGGLE_2D_MAP '\t'
 #define KEY_ESCAPE 27
+#define KEY_RESET 'r'
 
 typedef struct {
 	int forward;
@@ -14,6 +15,7 @@ typedef struct {
 	int turnLeft;
 	int turnRight;
 	int moving;
+	int reset;
 } keyStates;
 
 #define STATE_FORWARD 0
@@ -21,6 +23,7 @@ typedef struct {
 #define STATE_TURN_LEFT 2
 #define STATE_TURN_RIGHT 3
 #define STATE_MOVING 4
+#define STATE_RESET 5
 
 void initKeyboard();
 

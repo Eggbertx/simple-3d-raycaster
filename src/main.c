@@ -145,16 +145,23 @@ void drawRays3D() {
 	}
 }
 
+void initPlayer() {
+	player->angle = ONE_RAD*90;
+	setPlayerPos(1, 1);
+	player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
+	player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
+}
+
 void updatePlayer() {
 	int xOffset = 0, yOffset = 0;
-	if(player->dx < 0) {
+	if(player->dx < 0 || (getKeyState(STATE_MOVING) == 1 && getKeyState(STATE_TURN_LEFT) == 1)) {
 		xOffset = -PLAYER_OFFSET;
-	} else {
+	} else if(player->dx >= 0 || (getKeyState(STATE_MOVING) == 1 && getKeyState(STATE_TURN_RIGHT) == 1)) {
 		xOffset = PLAYER_OFFSET;
 	}
 	if(player->dy < 0) {
 		yOffset = -PLAYER_OFFSET;
-	} else  {
+	} else {
 		yOffset = PLAYER_OFFSET;
 	}
 	int ipx = player->x/TILE_SIZE;
@@ -172,6 +179,9 @@ void updatePlayer() {
 			player->y += player->dy;
 		}
 	}
+	if(getKeyState(STATE_RESET) == 1) {
+		initPlayer();
+	}
 	if(getKeyState(STATE_BACKWARDS) == 1) {
 		if(map[ipy * MAP_WIDTH + ipxSub] == 0) {
 			player->x -= player->dx;
@@ -182,8 +192,12 @@ void updatePlayer() {
 	}
 	if(getKeyState(STATE_TURN_LEFT) == 1) {
 		if(getKeyState(STATE_MOVING) == 1) {
-			player->x += sin(player->angle) * PLAYER_MOVE_SPEED;
-			player->y -= cos(player->angle) * PLAYER_MOVE_SPEED;
+			if(map[ipySub * MAP_WIDTH + ipx] == 0) {
+				player->x += sin(player->angle) * PLAYER_MOVE_SPEED;
+			}
+			if(map[ipySub * MAP_WIDTH + ipxSub] == 0) {
+				player->y -= cos(player->angle) * PLAYER_MOVE_SPEED;
+			}
 		} else {
 			player->angle = fixAngle(player->angle - PLAYER_TURN_SPEED);
 			player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
@@ -192,8 +206,12 @@ void updatePlayer() {
 	}
 	if(getKeyState(STATE_TURN_RIGHT) == 1) {
 		if(getKeyState(STATE_MOVING) == 1) {
-			player->x -= sin(player->angle) * PLAYER_MOVE_SPEED;
-			player->y += cos(player->angle) * PLAYER_MOVE_SPEED;
+			if(map[ipyAdd * MAP_WIDTH + ipxAdd] == 0) {
+				player->x -= sin(player->angle) * PLAYER_MOVE_SPEED;
+			}
+			if(map[ipyAdd * MAP_WIDTH + ipxAdd] == 0) {
+				player->y += cos(player->angle) * PLAYER_MOVE_SPEED;
+			}
 		} else {
 			player->angle = fixAngle(player->angle + PLAYER_TURN_SPEED);
 			player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
@@ -246,10 +264,7 @@ void init() {
 	defaultDistance = sqrt(pow(WINDOW_WIDTH, 2) + pow(WINDOW_HEIGHT, 2));
 	player = getPlayer();
 	map = getCurrentMap();
-	player->angle = ONE_RAD*90;
-	setPlayerPos(1, 1);
-	player->dx = cos(player->angle) * PLAYER_MOVE_SPEED;
-	player->dy = sin(player->angle) * PLAYER_MOVE_SPEED;
+	initPlayer();
 }
 
 void reshapeWindow(int w, int h) {
