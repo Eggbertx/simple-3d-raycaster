@@ -137,8 +137,8 @@ void drawRays3D() {
 		float lineOffset = 160 - lineHeight/2;
 		glLineWidth(RAY_WALL_SIZE);
 		glBegin(GL_LINES);
-		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+8, lineOffset);
-		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+8, lineHeight + lineOffset);
+		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+4, lineOffset);
+		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+4, lineHeight + lineOffset);
 		glEnd();
 
 		rayAngle = fixAngle(rayAngle + ONE_RAD/2.0);
