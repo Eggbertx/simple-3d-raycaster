@@ -3,8 +3,8 @@
 #define simple3D_VERSION_MAJOR @simple3D_VERSION_MAJOR@
 #define simple3D_VERSION_MINOR @simple3D_VERSION_MINOR@
 
-#define WINDOW_WIDTH 1000
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 480
+#define WINDOW_HEIGHT 320
 #define WINDOW_TITLE "@PROJECT_NAME@"
 
 #define PLAYER_MOVE_SPEED 5
@@ -20,11 +20,15 @@
 #define WALL_COLOR_H 0.9
 #define WALL_COLOR_V 0.7
 
-#define DELTA_MODIFIER PLAYER_MOVE_SPEED
+#define DELTA_MODIFIER 2
 
-#define SKYBOX_X MAP_WIDTH*TILE_SIZE+4
-#define SKYBOX_WIDTH 60*8-4
-#define SKYBOX_HEIGHT 160
+// #define SKYBOX_WIDTH 480-2
+// #define SKYBOX_HEIGHT 160
+
+#define MAP2D_WIDTH 128
+#define MAP2D_HEIGHT 128
+#define MAP2D_X WINDOW_WIDTH - MAP2D_WIDTH
+#define MAP2D_Y WINDOW_HEIGHT - MAP2D_HEIGHT
 
 #define deg2rad(deg) (deg/180*PI)
 #define rad2deg(rad) (rad/PI*180)

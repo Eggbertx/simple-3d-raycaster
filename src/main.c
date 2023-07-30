@@ -25,7 +25,7 @@ float fixAngle(float angle) {
 	return angle;
 }
 
-void drawRays3D() {
+void drawRays(int whichD) {
 	int r, mapX, mapY, mapIndex, depthOfField;
 	float rayX, rayY, rayAngle, rayDistance, xOffset, yOffset;
 
@@ -123,23 +123,34 @@ void drawRays3D() {
 			glColor3f(WALL_COLOR_H, 0, 0);
 		}
 
-		// draw ray(s) to the nearest horizontal or vertical wall
-		glLineWidth(2);
-		glBegin(GL_LINES);
-		glVertex2i(player->x, player->y);
-		glVertex2i(rayX, rayY);
-		glEnd();
-
-		// start drawing 3D walls
-		float angleDiff = fixAngle(player->angle - rayAngle);
-		rayDistance *= cos(angleDiff);
-		float lineHeight = min((TILE_SIZE * 320)/rayDistance, 320);
-		float lineOffset = 160 - lineHeight/2;
-		glLineWidth(RAY_WALL_SIZE);
-		glBegin(GL_LINES);
-		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+4, lineOffset);
-		glVertex2i(r*RAY_WALL_SIZE+MAP_WIDTH*TILE_SIZE+4, lineHeight + lineOffset);
-		glEnd();
+		switch(whichD) {
+		case 2:
+			// draw ray(s) to the nearest horizontal or vertical wall
+			glLineWidth(2);
+			glBegin(GL_LINES);
+			// printf("Drawing ray from %f,%f to %f,%f\n",
+			// 	(player->x + MAP2D_X)/1, (player->y + MAP2D_Y)/1,
+			// 	(rayX + MAP2D_X)/1, (rayY + MAP2D_Y)/1
+			// );
+			glVertex2i(player->x/4 + MAP2D_X, player->y/4 + MAP2D_Y);
+			glVertex2i(rayX/4 + MAP2D_X, rayY/4 + MAP2D_Y);
+			glEnd();
+			break;
+		case 3:
+			// start drawing 3D walls
+			float angleDiff = fixAngle(player->angle - rayAngle);
+			rayDistance *= cos(angleDiff);
+			float lineHeight = min((TILE_SIZE * 320)/rayDistance, 320);
+			float lineOffset = 160.0 - lineHeight/2;
+			glLineWidth(RAY_WALL_SIZE);
+			glBegin(GL_LINES);
+			glVertex2i(r*RAY_WALL_SIZE+RAY_WALL_SIZE/2.0, lineOffset);
+			glVertex2i(r*RAY_WALL_SIZE+RAY_WALL_SIZE/2.0, lineHeight + lineOffset);
+			glEnd();
+			break;
+		default:
+			break;
+		}
 
 		rayAngle = fixAngle(rayAngle + ONE_RAD/2.0);
 	}
@@ -221,39 +232,64 @@ void updatePlayer() {
 	glutPostRedisplay();
 }
 
+void drawMap2D() {
+	int xo, yo;
+	glColor3f(0.3, 0.3, 0.3);
+	glRectf(MAP2D_X, MAP2D_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
+	for(int y = 0; y < MAP_HEIGHT; y++) {
+		for(int x = 0; x < MAP_WIDTH; x++) {
+			if(map[y * MAP_HEIGHT + x] == 1) {
+				glColor3f(1, 1, 1);
+			} else {
+				glColor3f(0, 0, 0);
+			}
+			xo = MAP2D_X + x*16;
+			yo = MAP2D_Y + y*16;
+			glBegin(GL_QUADS);
+			glVertex2i(xo + 0.5, yo + 0.5);
+			glVertex2i(xo + 0.5, yo + 16 - 0.5);
+			glVertex2i(xo + 16 - 0.5, yo + 16 - 0.5);
+			glVertex2i(xo + 16 - 0.5, yo + 0.5);
+			glEnd();
+		}
+	}
+}
+
 void drawPlayer() {
 	// draw player as dot
 	glColor3f(1, 1, 0);
-	glPointSize(8);
+	glPointSize(4);
 	glBegin(GL_POINTS);
 
-	glVertex2i(player->x, player->y);
+	glVertex2i(player->x/4 + MAP2D_X, player->y/4 + MAP2D_Y);
 	glEnd();
 
 	// draw view direction as segment
-	glLineWidth(3);
+	glLineWidth(2);
 	glBegin(GL_LINES);
-	glVertex2i(player->x, player->y);
+	glVertex2i(player->x/4 + MAP2D_X, player->y/4 + MAP2D_Y);
 	glVertex2i(
-		player->x + player->dx * DELTA_MODIFIER,
-		player->y + player->dy * DELTA_MODIFIER
+		player->x/4 + player->dx * DELTA_MODIFIER + MAP2D_X,
+		player->y/4 + player->dy * DELTA_MODIFIER + MAP2D_Y
 	);
 	glEnd();
 	updatePlayer();
 }
 
+
 void drawSkyAndFloor() {
 	glColor3f(0.0, 0.59, 1.0); // sky color
-	glRecti(SKYBOX_X, 0, SKYBOX_X + SKYBOX_WIDTH, SKYBOX_HEIGHT);
+	glRecti(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT/2);
 	glColor3f(0.35, 0.18, 0.0);
-	glRecti(SKYBOX_X, SKYBOX_HEIGHT, SKYBOX_X + SKYBOX_WIDTH, SKYBOX_HEIGHT*2);
+	glRecti(0, WINDOW_HEIGHT/2, WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	drawMap2D();
 	drawSkyAndFloor();
-	drawRays3D();
+	drawRays(3);
+	drawMap2D();
+	drawRays(2);
 	drawPlayer();
 	glutSwapBuffers();
 }
