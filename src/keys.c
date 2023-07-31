@@ -1,101 +1,26 @@
-#include <GL/glut.h>
-#include <GL/freeglut_ext.h>
-
+#include <SDL_keyboard.h>
+#include <SDL_keycode.h>
 #include "keys.h"
 
-keyStates states;
 
-void onKeyDown(unsigned char key, int x, int y) {
-	switch(key) {
-	case KEY_MOVE_FORWARD:
-		states.forward = 1;
-		break;
-	case KEY_MOVE_BACKWARDS:
-		states.backwards = 1;
-		break;
-	case KEY_TURN_LEFT:
-		states.turnLeft = 1;
-		break;
-	case KEY_TURN_RIGHT:
-		states.turnRight = 1;
-		break;
-	case KEY_ESCAPE:
-		glutLeaveMainLoop();
-		break;
-	case KEY_RESET:
-		states.reset = 1;
-		break;
-	default:
-		break;
-	}
-}
+uint8_t getKeyState(int state) {
+	const uint8_t* kbState = SDL_GetKeyboardState(NULL);
 
-void onKeyUp(unsigned char key, int x, int y) {
-	switch (key) {
-	case KEY_MOVE_FORWARD:
-		states.forward = 0;
-		break;
-	case KEY_MOVE_BACKWARDS:
-		states.backwards = 0;
-		break;
-	case KEY_TURN_LEFT:
-		states.turnLeft = 0;
-		break;
-	case KEY_TURN_RIGHT:
-		states.turnRight = 0;
-		break;
-	case KEY_RESET:
-		states.reset = 0;
-		break;
-	default:
-		break;
-	}
-}
-
-void onSpecialKeyDown(int key, int x, int y) {
-	switch(key) {
-	case GLUT_KEY_ALT_L:
-	case GLUT_KEY_ALT_R:
-		states.moving = 1;
-		break;
-	default:
-		break;
-	}
-}
-
-void onSpecialKeyUp(int key, int x, int y) {
-	switch(key) {
-	case GLUT_KEY_ALT_L:
-	case GLUT_KEY_ALT_R:
-		states.moving = 0;
-		break;
-	default:
-		break;
-	}
-}
-
-int getKeyState(unsigned int state) {
 	switch(state) {
 	case STATE_FORWARD:
-		return states.forward;
+		return kbState[SDL_SCANCODE_W];
 	case STATE_BACKWARDS:
-		return states.backwards;
+		return kbState[SDL_SCANCODE_S];
 	case STATE_TURN_LEFT:
-		return states.turnLeft;
+		return kbState[SDL_SCANCODE_A];
 	case STATE_TURN_RIGHT:
-		return states.turnRight;
+		return kbState[SDL_SCANCODE_D];
 	case STATE_MOVING:
-		return states.moving;
+		return kbState[SDL_SCANCODE_LALT];
 	case STATE_RESET:
-		return states.reset;
+		return kbState[SDL_SCANCODE_R];
+	case STATE_EXIT:
+		return kbState[SDL_SCANCODE_ESCAPE];
 	}
 	return 0;
-}
-
-void initKeyboard() {
-	glutKeyboardFunc(onKeyDown);
-	glutKeyboardUpFunc(onKeyUp);
-	glutSpecialFunc(onSpecialKeyDown);
-	glutSpecialUpFunc(onSpecialKeyUp);
-	glutIgnoreKeyRepeat(GL_TRUE);
 }

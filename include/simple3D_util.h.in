@@ -1,5 +1,5 @@
-#ifndef SIMPLE3D_CONFIG_H
-#define SIMPLE3D_CONFIG_H
+#ifndef SIMPLE3D_UTIL_H
+#define SIMPLE3D_UTIL_H
 #define simple3D_VERSION_MAJOR @simple3D_VERSION_MAJOR@
 #define simple3D_VERSION_MINOR @simple3D_VERSION_MINOR@
 
@@ -34,4 +34,8 @@
 #define rad2deg(rad) (rad/PI*180)
 #define min(a, b) ((a>b)?b:a)
 
-#endif // SIMPLE3D_CONFIG_H
+float distance(float ax, float ay, float bx, float by);
+
+float fixAngle(float angle);
+
+#endif // SIMPLE3D_UTIL_H

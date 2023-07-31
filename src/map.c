@@ -1,5 +1,3 @@
-#include <GL/gl.h>
-
 #include "map.h"
 
 int _map[] = {
