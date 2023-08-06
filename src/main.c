@@ -15,6 +15,7 @@
 actor* player;
 int* map;
 float defaultDistance;
+int draw2D;
 
 void initPlayer() {
 	player->angle = ONE_RAD*90;
@@ -99,6 +100,7 @@ void initGame() {
 	defaultDistance = sqrt(pow(WINDOW_WIDTH, 2) + pow(WINDOW_HEIGHT, 2));
 	player = getPlayer();
 	map = getCurrentMap();
+	draw2D = 1;
 	initPlayer();
 }
 
@@ -106,9 +108,11 @@ void drawStuff() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	drawSkyAndFloor();
 	drawRays(player, 3);
-	drawMap2D(map);
-	drawRays(player, 2);
-	drawPlayer(player);
+	if(draw2D == 1) {
+		drawMap2D(map);
+		drawRays(player, 2);
+		drawPlayer(player);
+	}
 	flipScreen();
 }
 
@@ -138,6 +142,11 @@ int main(int argc, char *argv[]) {
 
 		if(SDL_PollEvent(&event)) {
 			switch(event.type) {
+			case SDL_KEYDOWN:
+				if(event.key.keysym.scancode == SDL_SCANCODE_TAB && !event.key.repeat) {
+					draw2D = !draw2D;
+				}
+				break;
 			case SDL_QUIT:
 				cleanupGraphics();
 				return 0;
