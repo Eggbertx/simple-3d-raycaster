@@ -1,4 +1,5 @@
 #include <GL/gl.h>
+#include <GL/glu.h>
 #include <SDL.h>
 
 #include <simple3D_util.h>
@@ -8,11 +9,10 @@
 
 SDL_Window* window;
 SDL_Renderer* renderer;
-SDL_Texture* texture;
 SDL_GLContext glContext;
 
 int initSDL() {
-	int success = SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS);
+	int success = SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER);
 	if(success < 0) {
 		SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO, "Could not initialize SDL: %s\n", SDL_GetError());
 		return success;
@@ -36,12 +36,6 @@ int initSDL() {
 		return 1;
 	}
 
-	texture = SDL_CreateTexture(renderer,
-		SDL_PIXELFORMAT_ARGB8888,
-		SDL_TEXTUREACCESS_STATIC,
-		WINDOW_WIDTH, WINDOW_HEIGHT);
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
 	glContext = SDL_GL_CreateContext(window);
 	if(glContext == NULL) {
 		SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO, "Could not create OpenGL context: %s\n", SDL_GetError());
@@ -51,38 +45,33 @@ int initSDL() {
 	if(SDL_GL_SetSwapInterval(1) < 0) {
 		SDL_LogWarn(SDL_LOG_CATEGORY_RENDER, "Could not set VSync: %s\n", SDL_GetError());
 	}
+	return 0;
 }
 
-GLenum initGL() {
-	GLenum error = GL_NO_ERROR;
-	glMatrixMode(GL_PROJECTION);
+int initGL() {
+	int error = GL_NO_ERROR;
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	error = glGetError();
 	if(error != GL_NO_ERROR) {
 		return error;
 	}
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	error = glGetError();
-	
+
 	return error;
 }
 
 void cleanupGraphics() {
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
 
 void drawSkyAndFloor() {
-	SDL_Rect rect = {
-		x: 0,
-		y: 0,
-		w: WINDOW_WIDTH,
-		h: WINDOW_HEIGHT
-	};
 	glColor3f(0.0, 0.59, 1.0); // sky color
-	glRecti(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT/2);
+	glRectf(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT/2);
 	glColor3f(0.35, 0.18, 0.0); // ground color
 	glRecti(0, WINDOW_HEIGHT/2, WINDOW_WIDTH, WINDOW_HEIGHT);
 }
@@ -96,8 +85,8 @@ void fillScreen() {
 }
 
 void flipScreen() {
-	// SDL_RenderPresent(renderer);
 	SDL_GL_SwapWindow(window);
+	// SDL_RenderPresent(renderer);
 }
 
 void drawRays(actor* player, int whichD) {

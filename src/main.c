@@ -92,7 +92,6 @@ void updatePlayer() {
 }
 
 void initGame() {
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glClearColor(0.3, 0.3, 0.3, 1.0);
 	setDrawColor(76, 76, 76, 255);
 	fillScreen();
@@ -117,7 +116,7 @@ int main(int argc, char *argv[]) {
 	if(initSDL() != 0) {
 		return 1;
 	}
-	GLenum gError = initGL();
+	int gError = initGL();
 	if(gError != GL_NO_ERROR) {
 		SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO, "Error initializing OpenGL: %s\n", gluErrorString(gError));
 		return 1;
@@ -125,10 +124,17 @@ int main(int argc, char *argv[]) {
 
 	initGame();
 	SDL_Event event;
+	Uint64 a = 0, b = 0, delta = 0;
 	while(1) {
+		a = SDL_GetTicks64();
+		delta = a - b;
 		if(getKeyState(STATE_EXIT)) {
 			break;
 		}
+		if(delta <= 1000.0/FPS) continue;
+		printf("\rfps: %0.1f", 1000.0/delta);
+		b = a;
+
 		updatePlayer();
 
 		if(!SDL_PollEvent(&event)) continue;
@@ -136,8 +142,6 @@ int main(int argc, char *argv[]) {
 		case SDL_QUIT:
 			cleanupGraphics();
 			return 0;
-		case SDL_DISPLAYEVENT:
-			printf("Displaying\n");
 		}
 		drawStuff();
 	}

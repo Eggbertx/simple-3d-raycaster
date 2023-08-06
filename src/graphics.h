@@ -5,7 +5,7 @@
 
 int initSDL();
 
-GLenum initGL();
+int initGL();
 
 void cleanupGraphics();
 

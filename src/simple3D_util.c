@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include <simple3D_config.h>
+#include <simple3D_util.h>
 
 float distance(float ax, float ay, float bx, float by) {
 	return sqrt(pow(bx - ax, 2) + pow(by - ay, 2));
