@@ -1,4 +1,4 @@
-#include <simple3D_config.h>
+#include <simple3D_util.h>
 
 #include "actors.h"
 #include "map.h"
