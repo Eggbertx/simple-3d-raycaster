@@ -132,16 +132,16 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 		if(delta <= 1000.0/FPS) continue;
-		printf("\rfps: %0.1f", 1000.0/delta);
 		b = a;
 
 		updatePlayer();
 
-		if(!SDL_PollEvent(&event)) continue;
-		switch(event.type) {
-		case SDL_QUIT:
-			cleanupGraphics();
-			return 0;
+		if(SDL_PollEvent(&event)) {
+			switch(event.type) {
+			case SDL_QUIT:
+				cleanupGraphics();
+				return 0;
+			}
 		}
 		drawStuff();
 	}
