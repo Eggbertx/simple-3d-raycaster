@@ -30,6 +30,7 @@
 #define MAP2D_HEIGHT 128
 #define MAP2D_X WINDOW_WIDTH - MAP2D_WIDTH
 #define MAP2D_Y WINDOW_HEIGHT - MAP2D_HEIGHT
+#define MAP2D_ALPHA 0.5
 
 #define deg2rad(deg) (deg/180*PI)
 #define rad2deg(rad) (rad/PI*180)

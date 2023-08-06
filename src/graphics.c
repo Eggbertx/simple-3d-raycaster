@@ -50,6 +50,8 @@ int initSDL() {
 
 int initGL() {
 	int error = GL_NO_ERROR;
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	error = glGetError();
@@ -177,14 +179,14 @@ void drawRays(actor* player, int whichD) {
 			rayX = vx;
 			rayY = vy;
 			rayDistance = distV;
-			glColor3f(WALL_COLOR_V, 0, 0);
+			glColor4f(WALL_COLOR_V, 0, 0, (whichD == 2)?MAP2D_ALPHA/2:1.0);
 		}
 		if(distH < distV) {
 			// ray hit a horizontal line/wall
 			rayX = hx;
 			rayY = hy;
 			rayDistance = distH;
-			glColor3f(WALL_COLOR_H, 0, 0);
+			glColor4f(WALL_COLOR_H, 0, 0, (whichD == 2)?MAP2D_ALPHA/2:1.0);
 		}
 
 		switch(whichD) {
@@ -217,7 +219,7 @@ void drawRays(actor* player, int whichD) {
 
 void drawPlayer(actor* player) {
 	// draw player as dot
-	glColor3f(1, 1, 0);
+	glColor4f(1, 1, 0, MAP2D_ALPHA);
 	glPointSize(4);
 	glBegin(GL_POINTS);
 
@@ -238,14 +240,14 @@ void drawPlayer(actor* player) {
 
 void drawMap2D(int* map) {
 	int xo, yo;
-	glColor3f(0.3, 0.3, 0.3);
+	glColor4f(0.3, 0.3, 0.3, MAP2D_ALPHA);
 	glRectf(MAP2D_X, MAP2D_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
 	for(int y = 0; y < MAP_HEIGHT; y++) {
 		for(int x = 0; x < MAP_WIDTH; x++) {
 			if(map[y * MAP_HEIGHT + x] == 1) {
-				glColor3f(1, 1, 1);
+				glColor4f(1, 1, 1, MAP2D_ALPHA);
 			} else {
-				glColor3f(0, 0, 0);
+				glColor4f(0, 0, 0, MAP2D_ALPHA);
 			}
 			xo = MAP2D_X + x*16;
 			yo = MAP2D_Y + y*16;
