@@ -89,19 +89,21 @@ void drawRays(actor* player, int whichD) {
 				depthOfField++;
 			}
 		}
+		float shade = 1.0;
 		if(distV < distH) {
 			// ray hit a vertical line/wall
 			rayX = vx;
 			rayY = vy;
 			rayDistance = distV;
-			glColor4f(WALL_COLOR_V, 0, 0, (whichD == 2)?MAP2D_ALPHA/2:1.0);
+			glColor4f(1, 0, 0, (whichD == 2)?MAP2D_ALPHA/2:1.0);
+			shade = SHADED_WALL;
 		}
 		if(distH < distV) {
 			// ray hit a horizontal line/wall
 			rayX = hx;
 			rayY = hy;
 			rayDistance = distH;
-			glColor4f(WALL_COLOR_H, 0, 0, (whichD == 2)?MAP2D_ALPHA/2:1.0);
+			glColor4f(1, 0, 0, (whichD == 2)?MAP2D_ALPHA/2:1.0);
 		}
 
 		SDL_Color color = {0, 0, 0, SDL_ALPHA_OPAQUE};
@@ -118,18 +120,32 @@ void drawRays(actor* player, int whichD) {
 			// start drawing 3D walls
 			float angleDiff = fixAngle(player->angle - rayAngle);
 			rayDistance *= cos(angleDiff);
-			float lineHeight = min((TILE_SIZE * 320)/rayDistance, 320);
+			float lineHeight = (TILE_SIZE * 320)/rayDistance;
+			float yStep = 32.0/(float)lineHeight;
+			float texYOffset = 0;
+			if(lineHeight > 320) {
+				texYOffset = (lineHeight - 320)/2.0;
+				lineHeight = 320;
+			}
 			float lineOffset = 160.0 - lineHeight/2;
 			glPointSize(RAY_WALL_SIZE);
 			glBegin(GL_POINTS);
-			float texY = 0;
-			float yStep = 32.0/(float)lineHeight;
+			float texY = texYOffset * yStep;
+			float texX;
+			if(shade == 1.0) {
+				texX = (int)(rayX/2.0) % checkerboard->w;
+				if(rayAngle <= PI)
+					texX = 31 - texX;
+			} else {
+				texX = (int)(rayY/2.0) % checkerboard->w;
+				if(rayAngle < PI_3 && rayAngle > PI_2)
+					texX = 31 - texX;
+			}
+			
 			for(int y = 0; y < lineHeight; y++) {
-				colorAt(checkerboard, &color, r % 32, (int)texY);
-				float mult = (distV < distH)?WALL_COLOR_V:WALL_COLOR_H;
-				glColor3ub(color.r * mult, color.g * mult, color.b * mult);
+				colorAt(checkerboard, &color, (int)texX, (int)texY);
+				glColor3ub(color.r * shade, color.g * shade, color.b * shade);
 				glVertex2i(r*RAY_WALL_SIZE+RAY_WALL_SIZE/2.0, y+lineOffset);
-				
 				texY += yStep;
 			}
 			glEnd();
