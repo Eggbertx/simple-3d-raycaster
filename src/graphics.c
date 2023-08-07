@@ -101,9 +101,9 @@ int loadTextures() {
 	textures = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * TEXTURE_END);
 	textures[TEXTURE_EMPTY] = SDL_CreateRGBSurfaceWithFormat(0, 32, 32, 32, SDL_PIXELFORMAT_RGBA8888);
 	textures[TEXTURE_BRICKS] = IMG_Load("textures/bricks.png");
-	textures[TEXTURE_DOOR] = IMG_Load("textures/checkerboard.png");
+	textures[TEXTURE_DOOR] = IMG_Load("textures/door.png");
 	textures[TEXTURE_CHECKERBOARD] = IMG_Load("textures/checkerboard.png");
-	textures[TEXTURE_END] = IMG_Load("textures/checkerboard.png");
+	textures[TEXTURE_END] = IMG_Load("textures/end.png");
 	for(int i = 0; i <= TEXTURE_END; i++) {
 		if(textures[i] == NULL)
 			return 1;
