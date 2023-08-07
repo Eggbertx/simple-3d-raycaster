@@ -13,6 +13,8 @@ void drawRays(actor* player, int whichD) {
 	int* map = getCurrentMap();
 	rayAngle = fixAngle(player->angle - ONE_RAD*30);
 	for(int r = 0; r < NUM_RAYS; r++) {
+		int vertTexIndex = 0;
+		int horizTexIndex = 0;
 		// check horizontal lines
 		depthOfField = 0;
 		float distH = WINDOW_WIDTH * WINDOW_HEIGHT, hx = player->x, hy = player->y;
@@ -45,6 +47,8 @@ void drawRays(actor* player, int whichD) {
 				hy = rayY;
 				distH = distance(player->x, player->y, hx, hy);
 				depthOfField = 8;
+				if(mapIndex > 0 && mapIndex < MAP_WIDTH*MAP_WIDTH)
+					horizTexIndex = map[mapIndex];
 			} else {
 				rayX += xOffset;
 				rayY += yOffset;
@@ -84,6 +88,8 @@ void drawRays(actor* player, int whichD) {
 				vy = rayY;
 				distV = distance(player->x, player->y, vx, vy);
 				depthOfField = 8;
+				if(mapIndex > 0 && mapIndex < MAP_WIDTH*MAP_WIDTH)
+					vertTexIndex = map[mapIndex];
 			} else {
 				rayX += xOffset;
 				rayY += yOffset;
@@ -133,18 +139,20 @@ void drawRays(actor* player, int whichD) {
 			glBegin(GL_POINTS);
 			float texY = texYOffset * yStep;
 			float texX;
+			int useTexIndex = horizTexIndex;
 			if(shade == 1.0) {
-				texX = (int)(rayX/2.0) % textures[TEXTURE_BRICKS]->w;
+				texX = (int)(rayX/2.0) % textures[useTexIndex]->w;
 				if(rayAngle <= PI)
 					texX = 31 - texX;
 			} else {
-				texX = (int)(rayY/2.0) % textures[TEXTURE_BRICKS]->w;
+				useTexIndex = vertTexIndex;
+				texX = (int)(rayY/2.0) % textures[useTexIndex]->w;
 				if(rayAngle < PI_3 && rayAngle > PI_2)
 					texX = 31 - texX;
 			}
-			
+			// printf("useTexIndex: %d\n", useTexIndex);
 			for(int y = 0; y < lineHeight; y++) {
-				colorAt(textures[TEXTURE_BRICKS], &color, (int)texX, (int)texY);
+				colorAt(textures[useTexIndex], &color, (int)texX, (int)texY);
 				glColor3ub(color.r * shade, color.g * shade, color.b * shade);
 				glVertex2i(r*RAY_WALL_SIZE+RAY_WALL_SIZE/2.0, y+lineOffset);
 				texY += yStep;
