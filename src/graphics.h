@@ -1,11 +1,16 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include <SDL_surface.h>
 #include "actors.h"
+
+extern SDL_Surface* checkerboard;
 
 int initSDL();
 
 int initGL();
+
+int loadTextures();
 
 void cleanupGraphics();
 
@@ -15,12 +20,6 @@ void fillScreen();
 
 void flipScreen();
 
-void drawSkyAndFloor();
-
-void drawRays(actor* player, int whichD);
-
-void drawPlayer(actor* player);
-
-void drawMap2D();
+int colorAt(SDL_Surface* surface, SDL_Color* color, int x, int y);
 
 #endif // GRAPHICS_H

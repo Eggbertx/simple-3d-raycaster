@@ -16,7 +16,7 @@
 #define PI_2 PI/2
 #define PI_3 3*PI/2
 #define ONE_RAD 1.0/180*PI
-#define NUM_RAYS 120
+#define NUM_RAYS 128
 #define RAY_WALL_SIZE 4
 #define WALL_COLOR_H 0.9
 #define WALL_COLOR_V 0.7

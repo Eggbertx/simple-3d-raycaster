@@ -11,6 +11,7 @@
 #include "actors.h"
 #include "map.h"
 #include "graphics.h"
+#include "drawing.h"
 
 actor* player;
 int* map;
@@ -122,7 +123,8 @@ int main(int argc, char *argv[]) {
 	}
 	int gError = initGL();
 	if(gError != GL_NO_ERROR) {
-		SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO, "Error initializing OpenGL: %s\n", gluErrorString(gError));
+		SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO,
+			"Error initializing OpenGL: %s\n", gluErrorString(gError));
 		return 1;
 	}
 
