@@ -10,6 +10,7 @@ void drawRays(actor* player, int whichD) {
 	int r, mapX, mapY, mapIndex, depthOfField;
 	float rayX, rayY, rayAngle, rayDistance, xOffset, yOffset;
 
+	int* map = getCurrentMap();
 	rayAngle = fixAngle(player->angle - ONE_RAD*30);
 	for(int r = 0; r < NUM_RAYS; r++) {
 		// check horizontal lines
@@ -133,17 +134,17 @@ void drawRays(actor* player, int whichD) {
 			float texY = texYOffset * yStep;
 			float texX;
 			if(shade == 1.0) {
-				texX = (int)(rayX/2.0) % checkerboard->w;
+				texX = (int)(rayX/2.0) % textures[TEXTURE_BRICKS]->w;
 				if(rayAngle <= PI)
 					texX = 31 - texX;
 			} else {
-				texX = (int)(rayY/2.0) % checkerboard->w;
+				texX = (int)(rayY/2.0) % textures[TEXTURE_BRICKS]->w;
 				if(rayAngle < PI_3 && rayAngle > PI_2)
 					texX = 31 - texX;
 			}
 			
 			for(int y = 0; y < lineHeight; y++) {
-				colorAt(checkerboard, &color, (int)texX, (int)texY);
+				colorAt(textures[TEXTURE_BRICKS], &color, (int)texX, (int)texY);
 				glColor3ub(color.r * shade, color.g * shade, color.b * shade);
 				glVertex2i(r*RAY_WALL_SIZE+RAY_WALL_SIZE/2.0, y+lineOffset);
 				texY += yStep;
@@ -184,7 +185,7 @@ void drawMap2D(int* map) {
 	glRectf(MAP2D_X, MAP2D_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
 	for(int y = 0; y < MAP_HEIGHT; y++) {
 		for(int x = 0; x < MAP_WIDTH; x++) {
-			if(map[y * MAP_HEIGHT + x] == 1) {
+			if(map[y * MAP_HEIGHT + x] > 0) {
 				glColor4f(1, 1, 1, MAP2D_ALPHA);
 			} else {
 				glColor4f(0, 0, 0, MAP2D_ALPHA);

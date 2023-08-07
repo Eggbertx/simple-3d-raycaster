@@ -7,6 +7,8 @@
 
 int hasCollision(int x, int y);
 
+int tileAt(int x, int y);
+
 int* getCurrentMap();
 
 #endif // MAP_H

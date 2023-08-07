@@ -4,7 +4,16 @@
 #include <SDL_surface.h>
 #include "actors.h"
 
-extern SDL_Surface* checkerboard;
+enum {
+	TEXTURE_EMPTY, // not loaded/rendered
+	TEXTURE_BRICKS,
+	TEXTURE_DOOR,
+	TEXTURE_CHECKERBOARD,
+	TEXTURE_END
+};
+
+// extern SDL_Surface* checkerboard;
+extern SDL_Surface** textures;
 
 int initSDL();
 

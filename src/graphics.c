@@ -11,7 +11,7 @@
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_GLContext glContext;
-SDL_Surface* checkerboard;
+SDL_Surface** textures;
 
 int initSDL() {
 	int success = SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER);
@@ -82,20 +82,31 @@ int initGL() {
 	return error;
 }
 
+SDL_Surface* loadTexture(const char* file) {
+	SDL_Surface* surface = IMG_Load(file);
+	if(surface == NULL) {
+		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, IMG_GetError());
+		return NULL;
+	}
+	if(surface->w != 32 || surface->h != 32) {
+		SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+			"Invalid resolution for %s (expected 32x32, got %dx%d)",
+			file, surface->w, surface->h);
+	}
+	return surface;
+}
+
 int loadTextures() {
-	if(checkerboard == NULL) {
-		checkerboard = IMG_Load("textures/checkerboard.png");
-		if(checkerboard == NULL) {
-			SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION,
-				IMG_GetError());
+	if(textures != NULL) return 0;
+	textures = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * TEXTURE_END);
+	textures[TEXTURE_EMPTY] = SDL_CreateRGBSurfaceWithFormat(0, 32, 32, 32, SDL_PIXELFORMAT_RGBA8888);
+	textures[TEXTURE_BRICKS] = IMG_Load("textures/bricks.png");
+	textures[TEXTURE_DOOR] = IMG_Load("textures/checkerboard.png");
+	textures[TEXTURE_CHECKERBOARD] = IMG_Load("textures/checkerboard.png");
+	textures[TEXTURE_END] = IMG_Load("textures/checkerboard.png");
+	for(int i = 0; i <= TEXTURE_END; i++) {
+		if(textures[i] == NULL)
 			return 1;
-		}
-		if(checkerboard->w != 32 || checkerboard->h != 32) {
-			SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION,
-				"Invalid resolution for texture (expected 32x32, got %dx%d)",
-				checkerboard->w, checkerboard->h);
-			return 1;
-		}
 	}
 	return 0;
 }
@@ -103,8 +114,9 @@ int loadTextures() {
 void cleanupGraphics() {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
-	if(checkerboard != NULL)
-		SDL_FreeSurface(checkerboard);
+	for(int s = 0; s <= TEXTURE_END; s++) {
+		SDL_FreeSurface(textures[s]);
+	}
 	IMG_Quit();
 	SDL_Quit();
 }
