@@ -118,8 +118,14 @@ void drawStuff() {
 }
 
 int main(int argc, char *argv[]) {
-	if(initSDL() != 0) {
-		return 1;
+	int success = 0;
+	if(argc > 2 && strcmp(argv[1], "--textures-dir") == 0) {
+		success = initSDL(argv[2]);
+	} else {
+		success = initSDL("./textures");
+	}
+	if(success != 0) {
+		return success;
 	}
 	int gError = initGL();
 	if(gError != GL_NO_ERROR) {

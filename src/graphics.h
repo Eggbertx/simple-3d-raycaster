@@ -15,11 +15,11 @@ enum {
 // extern SDL_Surface* checkerboard;
 extern SDL_Surface** textures;
 
-int initSDL();
+int initSDL(char* texturesDir);
 
 int initGL();
 
-int loadTextures();
+int loadTextures(char* texturesDir);
 
 void cleanupGraphics();
 

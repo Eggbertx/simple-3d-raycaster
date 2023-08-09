@@ -13,7 +13,7 @@ SDL_Renderer* renderer;
 SDL_GLContext glContext;
 SDL_Surface** textures;
 
-int initSDL() {
+int initSDL(char* texturesDir) {
 	int success = SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER);
 	if(success < 0) {
 		SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO,
@@ -27,7 +27,7 @@ int initSDL() {
 		return 1;
 	}
 
-	if(loadTextures() != 0) {
+	if(loadTextures(texturesDir) != 0) {
 		return 1;
 	}
 
@@ -82,28 +82,46 @@ int initGL() {
 	return error;
 }
 
-SDL_Surface* loadTexture(const char* file) {
-	SDL_Surface* surface = IMG_Load(file);
+char* pathJoin(char* dir, char* file) {
+#ifdef WIN32
+	char* delim = "\\";
+#else
+	char* delim = "/";
+#endif
+	int len = strlen(dir);
+	if(dir[len-1] != delim[0])
+		len++;
+	len += strlen(file);
+	char* path = (char*)malloc(len);
+	strcpy(path, dir);
+	if(path[strlen(dir)-1] != delim[0])
+		strcat(path, delim);
+	strcat(path, file);
+	return path;
+}
+
+SDL_Surface* loadTexture(char* texturesDir, char* file) {
+	char* path = pathJoin(texturesDir, file);
+	SDL_Surface* surface = IMG_Load(path);
 	if(surface == NULL) {
 		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, IMG_GetError());
-		return NULL;
-	}
-	if(surface->w != 32 || surface->h != 32) {
+	} else if(surface->w != 32 || surface->h != 32) {
 		SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
 			"Invalid resolution for %s (expected 32x32, got %dx%d)",
-			file, surface->w, surface->h);
+			path, surface->w, surface->h);
 	}
+	free(path);
 	return surface;
 }
 
-int loadTextures() {
+int loadTextures(char* texturesDir) {
 	if(textures != NULL) return 0;
 	textures = (SDL_Surface**)malloc(sizeof(SDL_Surface*) * TEXTURE_END);
 	textures[TEXTURE_EMPTY] = SDL_CreateRGBSurfaceWithFormat(0, 32, 32, 32, SDL_PIXELFORMAT_RGBA8888);
-	textures[TEXTURE_BRICKS] = IMG_Load("textures/bricks.png");
-	textures[TEXTURE_DOOR] = IMG_Load("textures/door.png");
-	textures[TEXTURE_CHECKERBOARD] = IMG_Load("textures/checkerboard.png");
-	textures[TEXTURE_END] = IMG_Load("textures/end.png");
+	textures[TEXTURE_BRICKS] = loadTexture(texturesDir, "bricks.png");
+	textures[TEXTURE_DOOR] = loadTexture(texturesDir, "door.png");
+	textures[TEXTURE_CHECKERBOARD] = loadTexture(texturesDir, "checkerboard.png");
+	textures[TEXTURE_END] = loadTexture(texturesDir, "end.png");
 	for(int i = 0; i <= TEXTURE_END; i++) {
 		if(textures[i] == NULL)
 			return 1;
