@@ -3,9 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 project(simple-3d-raycaster VERSION 0.1 LANGUAGES C)
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 find_package(OpenGL REQUIRED)
-include(FindPkgConfig)
-pkg_search_module(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
 configure_file(include/simple3D_util.h.in include/simple3D_util.h)
 set(SOURCES
@@ -19,8 +18,10 @@ set(SOURCES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+if(NOT WIN32)
+	target_link_libraries(${PROJECT_NAME} m)
+endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
-	m # math
 	${SDL2_LIBRARIES}
 	${SDL2IMAGE_LIBRARIES}
 	${OPENGL_LIBRARIES}
