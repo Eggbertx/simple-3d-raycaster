@@ -19,6 +19,7 @@ else()
 	set(LINK_LIBRARIES
 		${LINK_LIBRARIES}
 		m
+		${SDL2_IMAGE_LIBRARIES}
 	)
 endif()
 
