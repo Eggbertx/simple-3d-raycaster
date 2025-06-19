@@ -7,7 +7,6 @@ find_package(OpenGL REQUIRED)
 
 set(LINK_LIBRARIES
 	${SDL2_LIBRARIES}
-	${SDL2IMAGE_LIBRARIES}
 	${OPENGL_LIBRARIES}
 )
 
@@ -22,6 +21,8 @@ else()
 		${SDL2_IMAGE_LIBRARIES}
 	)
 endif()
+
+set(LINK_LIBRARIES ${LINK_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 
 configure_file(include/simple3D_util.h.in include/simple3D_util.h)
 set(SOURCES

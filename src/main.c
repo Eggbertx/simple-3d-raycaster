@@ -151,6 +151,7 @@ int main(int argc, char *argv[]) {
 
 		updatePlayer();
 
+		SDL_PumpEvents();
 		if(SDL_PollEvent(&event)) {
 			switch(event.type) {
 			case SDL_KEYDOWN:
